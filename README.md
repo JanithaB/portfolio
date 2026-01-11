@@ -1,20 +1,95 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Janitha Rathnayake - Portfolio
 
-# Run and deploy your AI Studio app
+A modern portfolio website built with Next.js, React, and Tailwind CSS showcasing my work as an Electrical & Electronics Engineer specializing in IoT, Edge Computing, and Backend Systems.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/12S4RiavCT-So96VFYN50luze2rPMfiEx
+- 🎨 Modern, responsive design
+- ⚡ Built with Next.js 14 (App Router)
+- 🎯 TypeScript for type safety
+- 💅 Tailwind CSS for styling
+- 📱 Fully responsive layout
+- 🚀 Optimized performance
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Framework:** Next.js 14
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Library:** React 18
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, or pnpm
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd portfolio
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+
+## Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+## Project Structure
+
+```
+portfolio/
+├── app/                 # Next.js app directory
+│   ├── layout.tsx      # Root layout
+│   ├── page.tsx        # Home page
+│   └── globals.css     # Global styles
+├── components/         # React components
+│   ├── About.tsx
+│   ├── Contact.tsx
+│   ├── Experience.tsx
+│   ├── Footer.tsx
+│   ├── Hero.tsx
+│   ├── Navbar.tsx
+│   ├── Projects.tsx
+│   └── Skills.tsx
+├── public/            # Static assets
+├── constants.tsx      # Data constants
+├── types.ts           # TypeScript types
+└── ...
+```
+
+## Customization
+
+Update your information in:
+- `constants.tsx` - Projects, skills, experience, social links
+- `components/` - Individual component content
+- `app/layout.tsx` - Metadata and site information
+
+## License
+
+This project is open source and available under the MIT License.

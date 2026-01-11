@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const About: React.FC = () => {
   return (
@@ -31,11 +32,13 @@ const About: React.FC = () => {
         
         <div className="relative group mx-auto md:mx-0 max-w-xs">
           <div className="absolute inset-0 border-2 border-teal-300 rounded translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform"></div>
-          <div className="relative bg-teal-500 rounded overflow-hidden">
-             <img 
-               src="/196902280.jpeg" 
+          <div className="relative bg-teal-500 rounded overflow-hidden w-full aspect-square">
+             <Image 
+               src="/profile.jpeg" 
                alt="Janitha Rathnayake" 
-               className="grayscale hover:grayscale-0 transition-all duration-300 mix-blend-multiply hover:mix-blend-normal opacity-80 hover:opacity-100" 
+               width={300}
+               height={300}
+               className="grayscale hover:grayscale-0 transition-all duration-300 mix-blend-multiply hover:mix-blend-normal opacity-80 hover:opacity-100 w-full h-full object-cover" 
              />
           </div>
         </div>

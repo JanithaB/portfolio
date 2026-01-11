@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { EXPERIENCE } from '../constants';
+import { EXPERIENCE } from '@/constants';
 
 const Experience: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);

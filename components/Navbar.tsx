@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { NAV_LINKS } from '../constants';
+import { NAV_LINKS } from '@/constants';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -29,7 +31,7 @@ const Navbar: React.FC = () => {
               {link.name}
             </a>
           ))}
-          <a href="/resume.pdf" target="_blank" className="text-sm font-medium text-teal-300 border border-teal-300 px-4 py-2 rounded hover:bg-teal-300/10 transition-colors">
+          <a href="/resume" className="text-sm font-medium text-teal-300 border border-teal-300 px-4 py-2 rounded hover:bg-teal-300/10 transition-colors">
             Resume
           </a>
         </div>
@@ -59,7 +61,7 @@ const Navbar: React.FC = () => {
               {link.name}
             </a>
           ))}
-           <a href="/resume.pdf" className="text-lg text-teal-300 border border-teal-300 px-6 py-2 rounded">
+           <a href="/resume" className="text-lg text-teal-300 border border-teal-300 px-6 py-2 rounded">
             Resume
           </a>
         </div>
