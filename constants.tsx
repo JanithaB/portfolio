@@ -72,8 +72,8 @@ export const SKILLS: Skill[] = [
     iconPath: 'https://img.icons8.com/color/48/tensorflow.png'
   },
   { 
-    name: 'Keras', 
-    iconPath: 'https://img.icons8.com/material-outlined/24/keras.png'
+    name: 'MCP', 
+    iconPath: 'https://img.icons8.com/fluency/48/model-context-protocol.png'
   },
 ];
 

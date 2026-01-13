@@ -39,7 +39,7 @@ const Skills: React.FC = () => {
                 />
               )}
               <span className="text-slate-300 font-mono text-xs md:text-sm text-center">{skill.name}</span>
-            </div>
+          </div>
           );
         })}
       </div>

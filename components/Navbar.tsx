@@ -60,24 +60,24 @@ const Navbar: React.FC = () => {
             onClick={() => setMenuOpen(false)}
           />
           <div className="md:hidden absolute top-full left-0 w-full bg-slate-800 shadow-xl py-6 flex flex-col items-center space-y-6 z-50">
-            {NAV_LINKS.map((link) => (
-              <a 
-                key={link.id} 
-                href={link.href} 
+          {NAV_LINKS.map((link) => (
+            <a 
+              key={link.id} 
+              href={link.href} 
                 className="text-lg text-slate-200 hover:text-teal-300 transition-colors touch-manipulation py-2"
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
             <a 
               href="/resume" 
               className="text-lg text-teal-300 border border-teal-300 px-8 py-3 rounded hover:bg-teal-300/10 transition-colors touch-manipulation"
               onClick={() => setMenuOpen(false)}
             >
-              Resume
-            </a>
-          </div>
+            Resume
+          </a>
+        </div>
         </>
       )}
     </nav>
