@@ -10,7 +10,7 @@ const Experience: React.FC = () => {
     <section id="experience" className="py-16 md:py-24">
       <div className="flex items-center mb-8 md:mb-12">
         <span className="text-teal-300 font-mono text-base md:text-xl mr-2 md:mr-4">02.</span>
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-100">Where I've Worked</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-100">Where I&apos;ve Worked</h2>
         <div className="h-[1px] bg-slate-700 flex-grow ml-2 md:ml-4"></div>
       </div>
 

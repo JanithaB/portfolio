@@ -13,13 +13,13 @@ const About: React.FC = () => {
       <div className="grid md:grid-cols-3 gap-8 md:gap-12">
         <div className="md:col-span-2 text-slate-400 text-base md:text-lg leading-relaxed space-y-4 order-2 md:order-1">
           <p>
-            Hello! My name is Janitha and I'm an Electrical & Electronics Engineer passionate about IoT, Edge Computing, and Backend Systems. I specialize in building production-level systems that bridge the gap between hardware and software.
+            Hello! My name is Janitha and I&apos;m an Electrical & Electronics Engineer passionate about IoT, Edge Computing, and Backend Systems. I specialize in building production-level systems that bridge the gap between hardware and software.
           </p>
           <p>
-            I have hands-on experience with IoT gateways, edge devices, and backend integrations. I've built production-level IoT gateways using Java with serial communication, MQTT data publishing, local SQLite storage, and multi-threaded processing. I've also worked with NVIDIA Jetson platforms to run ML models for real-world edge applications.
+            I have hands-on experience with IoT gateways, edge devices, and backend integrations. I&apos;ve built production-level IoT gateways using Java with serial communication, MQTT data publishing, local SQLite storage, and multi-threaded processing. I&apos;ve also worked with NVIDIA Jetson platforms to run ML models for real-world edge applications.
           </p>
           <p>
-            Here are a few technologies I've been working with recently:
+            Here are a few technologies I&apos;ve been working with recently:
           </p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-sm mt-4">
             {['C', 'Python', 'Java', 'JavaScript', 'Arduino', 'NVIDIA Jetson', 'Linux', 'MQTT', 'FastAPI', 'SQLite', 'Spring Boot', 'TensorFlow'].map((tech) => (

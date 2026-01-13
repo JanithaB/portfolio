@@ -186,7 +186,7 @@ export default function ResumePage() {
                 <span className="text-slate-400 text-xs sm:text-sm print:text-xs">07/2015 – 08/2017</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
-                <li>All 'A' passes for Combined Mathematics, Physics & Chemistry</li>
+                <li>All &apos;A&apos; passes for Combined Mathematics, Physics & Chemistry</li>
                 <li>Z-Score: 1.8146</li>
               </ul>
             </div>
@@ -322,21 +322,21 @@ export default function ResumePage() {
               <div className="flex justify-between items-start border-b border-slate-700 pb-2 print:pb-1">
                 <div>
                   <h3 className="text-sm font-semibold text-slate-100 print:text-xs">Chair Person</h3>
-                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students' Chapter, University of Peradeniya</p>
+                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students&apos; Chapter, University of Peradeniya</p>
                 </div>
                 <span className="text-slate-500 text-xs print:text-[10px]">07/2023 – 09/2024</span>
               </div>
               <div className="flex justify-between items-start border-b border-slate-700 pb-2 print:pb-1">
                 <div>
                   <h3 className="text-sm font-semibold text-slate-100 print:text-xs">Vice Chair</h3>
-                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students' Chapter, University of Peradeniya</p>
+                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students&apos; Chapter, University of Peradeniya</p>
                 </div>
                 <span className="text-slate-500 text-xs print:text-[10px]">05/2022 – 07/2023</span>
               </div>
               <div className="flex justify-between items-start border-b border-slate-700 pb-2 print:pb-1">
                 <div>
                   <h3 className="text-sm font-semibold text-slate-100 print:text-xs">Volunteer</h3>
-                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students' Chapter, University of Peradeniya</p>
+                  <p className="text-slate-400 text-xs print:text-[10px]">IEEE PES Peradeniya Students&apos; Chapter, University of Peradeniya</p>
                 </div>
                 <span className="text-slate-500 text-xs print:text-[10px]">01/2022 – 05/2022</span>
               </div>

@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
         I build IoT, Edge Computing & Backend Systems.
       </h2>
       <p className="max-w-lg text-slate-400 text-base md:text-lg leading-relaxed mb-8 md:mb-10">
-        I'm an Electrical & Electronics Engineer specializing in IoT gateways, edge devices, and backend integrations. Currently, I'm learning <span className="text-teal-300">CCNA / Java / JavaScript</span> and working on production-level systems.
+        I&apos;m an Electrical & Electronics Engineer specializing in IoT gateways, edge devices, and backend integrations. Currently, I&apos;m learning <span className="text-teal-300">CCNA / Java / JavaScript</span> and working on production-level systems.
       </p>
       <a 
         href="#projects" 

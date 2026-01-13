@@ -12,7 +12,6 @@ const Skills: React.FC = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
         {SKILLS.map((skill) => {
           const isSvg = skill.iconPath.includes('.svg');
-          const isMqtt = skill.iconPath.includes('mqtt');
           
           return (
             <div key={skill.name} className="flex flex-col items-center bg-slate-800 p-4 md:p-6 rounded hover:translate-y-[-5px] transition-transform touch-manipulation">
