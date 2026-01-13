@@ -10,34 +10,57 @@ export default function ResumePage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-200">
-      {/* Print Button - Hidden when printing */}
-      <div className="print:hidden fixed top-20 right-6 z-50">
+      {/* Mobile Button Bar - Sticky at top */}
+      <div className="print:hidden sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 md:hidden">
+        <div className="flex items-center justify-between px-4 py-3 gap-3">
+          <Link
+            href="/"
+            className="flex items-center gap-2 bg-slate-800 text-teal-300 px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-slate-700 transition-colors border border-teal-300 touch-manipulation flex-shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back</span>
+          </Link>
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 bg-teal-300 text-slate-900 px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-teal-400 transition-colors shadow-lg touch-manipulation flex-shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Print</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Buttons - Fixed positioning */}
+      <div className="print:hidden hidden md:block fixed top-20 right-6 z-50">
         <button
           onClick={handlePrint}
-          className="bg-teal-300 text-slate-900 px-6 py-3 rounded-lg font-semibold hover:bg-teal-400 transition-colors shadow-lg"
+          className="bg-teal-300 text-slate-900 px-6 py-3 rounded-lg font-semibold text-base hover:bg-teal-400 transition-colors shadow-lg touch-manipulation"
         >
           Print / Save as PDF
         </button>
       </div>
 
-      {/* Back Button - Hidden when printing */}
-      <div className="print:hidden fixed top-20 left-6 z-50">
+      <div className="print:hidden hidden md:block fixed top-20 left-6 z-50">
         <Link
           href="/"
-          className="bg-slate-800 text-teal-300 px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors border border-teal-300"
+          className="bg-slate-800 text-teal-300 px-6 py-3 rounded-lg font-semibold text-base hover:bg-slate-700 transition-colors border border-teal-300 touch-manipulation"
         >
           ← Back to Portfolio
         </Link>
       </div>
 
       {/* Resume Content */}
-      <div className="max-w-4xl mx-auto px-6 py-20 print:py-8">
-        <div className="bg-slate-800 rounded-lg p-8 print:p-6 print:bg-transparent print:rounded-none shadow-xl print:shadow-none">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 md:py-20 print:py-8">
+        <div className="bg-slate-800 rounded-lg p-4 sm:p-6 md:p-8 print:p-6 print:bg-transparent print:rounded-none shadow-xl print:shadow-none">
           {/* Header */}
-          <header className="mb-8 print:mb-6 border-b border-slate-700 pb-6 print:pb-4">
-            <h1 className="text-4xl print:text-3xl font-bold text-teal-300 mb-2">Janitha Rathnayake</h1>
+          <header className="mb-6 md:mb-8 print:mb-6 border-b border-slate-700 pb-4 md:pb-6 print:pb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl print:text-3xl font-bold text-teal-300 mb-2">Janitha Rathnayake</h1>
             {/* <p className="text-xl print:text-lg text-slate-300 mb-4">Systems Engineer</p> */}
-            <div className="flex flex-wrap gap-4 print:gap-2 text-sm text-slate-400">
+            <div className="flex flex-wrap gap-2 sm:gap-4 print:gap-2 text-xs sm:text-sm text-slate-400">
               <a href="mailto:jbrathnayake98@gmail.com" className="flex items-center gap-2 hover:text-teal-300 print:text-slate-600 transition-colors">
                 <svg className="w-4 h-4 text-teal-300 print:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -77,18 +100,18 @@ export default function ResumePage() {
           </header>
 
           {/* Professional Experience */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Professional Experience
             </h2>
             
-            <div className="mb-6 print:mb-4">
-              <div className="flex justify-between items-start mb-2">
+            <div className="mb-4 md:mb-6 print:mb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg print:text-base font-semibold text-slate-100">Electronic Engineer</h3>
-                  <p className="text-teal-300 text-sm">Vega Innovations (Pvt) Ltd</p>
+                  <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100">Electronic Engineer</h3>
+                  <p className="text-teal-300 text-xs sm:text-sm">Vega Innovations (Pvt) Ltd</p>
                 </div>
-                <span className="text-slate-400 text-sm print:text-xs">01/2025 – Present</span>
+                <span className="text-slate-400 text-xs sm:text-sm print:text-xs">01/2025 – Present</span>
               </div>
               <p className="text-slate-400 text-sm mb-2 print:text-xs">Maradana, Colombo</p>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
@@ -101,13 +124,13 @@ export default function ResumePage() {
               </ul>
             </div>
 
-            <div className="mb-6 print:mb-4">
-              <div className="flex justify-between items-start mb-2">
+            <div className="mb-4 md:mb-6 print:mb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg print:text-base font-semibold text-slate-100">Research Engineering Intern</h3>
-                  <p className="text-teal-300 text-sm">SLIOT Design & Innovation Laboratory</p>
+                  <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100">Research Engineering Intern</h3>
+                  <p className="text-teal-300 text-xs sm:text-sm">SLIOT Design & Innovation Laboratory</p>
                 </div>
-                <span className="text-slate-400 text-sm print:text-xs">08/2023 – 10/2023</span>
+                <span className="text-slate-400 text-xs sm:text-sm print:text-xs">08/2023 – 10/2023</span>
               </div>
               <p className="text-slate-400 text-sm mb-2 print:text-xs">University of Moratuwa, Katubedda, Moratuwa</p>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
@@ -118,13 +141,13 @@ export default function ResumePage() {
               </ul>
             </div>
 
-            <div className="mb-6 print:mb-4">
-              <div className="flex justify-between items-start mb-2">
+            <div className="mb-4 md:mb-6 print:mb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg print:text-base font-semibold text-slate-100">Engineering Trainee</h3>
-                  <p className="text-teal-300 text-sm">Sri Lanka Telecom</p>
+                  <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100">Engineering Trainee</h3>
+                  <p className="text-teal-300 text-xs sm:text-sm">Sri Lanka Telecom</p>
                 </div>
-                <span className="text-slate-400 text-sm print:text-xs">05/2022 – 08/2022</span>
+                <span className="text-slate-400 text-xs sm:text-sm print:text-xs">05/2022 – 08/2022</span>
               </div>
               <p className="text-slate-400 text-sm mb-2 print:text-xs">OPMC - Kurunegala</p>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
@@ -135,18 +158,18 @@ export default function ResumePage() {
           </section>
 
           {/* Education */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Education
             </h2>
             
-            <div className="mb-4 print:mb-3">
-              <div className="flex justify-between items-start mb-2">
+            <div className="mb-3 md:mb-4 print:mb-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg print:text-base font-semibold text-slate-100">B.Sc (Hons) in Electrical & Electronics Engineering</h3>
-                  <p className="text-teal-300 text-sm">University of Peradeniya</p>
+                  <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100">B.Sc (Hons) in Electrical & Electronics Engineering</h3>
+                  <p className="text-teal-300 text-xs sm:text-sm">University of Peradeniya</p>
                 </div>
-                <span className="text-slate-400 text-sm print:text-xs">12/2019 – 08/2024</span>
+                <span className="text-slate-400 text-xs sm:text-sm print:text-xs">12/2019 – 08/2024</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
                 <li>GPA: 3.2/4.0</li>
@@ -154,13 +177,13 @@ export default function ResumePage() {
               </ul>
             </div>
 
-            <div className="mb-4 print:mb-3">
-              <div className="flex justify-between items-start mb-2">
+            <div className="mb-3 md:mb-4 print:mb-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg print:text-base font-semibold text-slate-100">G.C.E Advanced Level Examination (Physical Sciences)</h3>
-                  <p className="text-teal-300 text-sm">Maliyadeva College</p>
+                  <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100">G.C.E Advanced Level Examination (Physical Sciences)</h3>
+                  <p className="text-teal-300 text-xs sm:text-sm">Maliyadeva College</p>
                 </div>
-                <span className="text-slate-400 text-sm print:text-xs">07/2015 – 08/2017</span>
+                <span className="text-slate-400 text-xs sm:text-sm print:text-xs">07/2015 – 08/2017</span>
               </div>
               <ul className="list-disc list-inside space-y-1 text-slate-300 text-sm print:text-xs ml-4">
                 <li>All 'A' passes for Combined Mathematics, Physics & Chemistry</li>
@@ -170,8 +193,8 @@ export default function ResumePage() {
           </section>
 
           {/* Skills */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Skills
             </h2>
             <div className="grid md:grid-cols-2 gap-4 print:gap-2">
@@ -206,8 +229,8 @@ export default function ResumePage() {
           </section>
 
           {/* Certificates */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Certificates
             </h2>
             <div className="space-y-3 print:space-y-2">
@@ -253,13 +276,13 @@ export default function ResumePage() {
           </section>
 
           {/* Projects */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Projects
             </h2>
             
-            <div className="mb-4 print:mb-3">
-              <h3 className="text-lg print:text-base font-semibold text-slate-100 mb-1">Mentoring Platform Microservices with Spring Boot</h3>
+            <div className="mb-3 md:mb-4 print:mb-3">
+              <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100 mb-1">Mentoring Platform Microservices with Spring Boot</h3>
               <p className="text-slate-400 text-sm print:text-xs italic mb-2">Ongoing</p>
               <p className="text-slate-300 text-sm print:text-xs mb-2">
                 Built backend services for a mentoring platform with Java Spring Boot, microservices, and MVC; handled user registration, session scheduling, and mentor-mentee matching.
@@ -269,8 +292,8 @@ export default function ResumePage() {
               </p>
             </div>
 
-            <div className="mb-4 print:mb-3">
-              <h3 className="text-lg print:text-base font-semibold text-slate-100 mb-1">Spiking Neuron Architecture for Information Processing</h3>
+            <div className="mb-3 md:mb-4 print:mb-3">
+              <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100 mb-1">Spiking Neuron Architecture for Information Processing</h3>
               <p className="text-slate-300 text-sm print:text-xs mb-2">
                 Implemented an efficient gradient descent approach in neural networks, optimizing training and computational cost; analyzed performance and potential improvements.
               </p>
@@ -279,8 +302,8 @@ export default function ResumePage() {
               </p>
             </div>
 
-            <div className="mb-4 print:mb-3">
-              <h3 className="text-lg print:text-base font-semibold text-slate-100 mb-1">Person Identification using Gait Pattern</h3>
+            <div className="mb-3 md:mb-4 print:mb-3">
+              <h3 className="text-base sm:text-lg print:text-base font-semibold text-slate-100 mb-1">Person Identification using Gait Pattern</h3>
               <p className="text-slate-300 text-sm print:text-xs mb-2">
                 Built TENG sensors to capture gait data and trained a CNN model for analysis. Developed a Python GUI application to collect and manage gait data.
               </p>
@@ -291,8 +314,8 @@ export default function ResumePage() {
           </section>
 
           {/* Other Experiences */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Other Experiences
             </h2>
             <div className="space-y-3 print:space-y-2">
@@ -325,8 +348,8 @@ export default function ResumePage() {
           </section>
 
           {/* Languages */}
-          <section className="mb-8 print:mb-6">
-            <h2 className="text-2xl print:text-xl font-bold text-teal-300 mb-4 print:mb-3 border-b border-slate-700 pb-2">
+          <section className="mb-6 md:mb-8 print:mb-6">
+            <h2 className="text-xl sm:text-2xl print:text-xl font-bold text-teal-300 mb-3 md:mb-4 print:mb-3 border-b border-slate-700 pb-2">
               Languages
             </h2>
             <div className="flex gap-4 print:gap-2 text-slate-300 text-sm print:text-xs">

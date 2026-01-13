@@ -34,6 +34,22 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-500;
   }
+
+  /* Mobile optimizations */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Hide scrollbar on mobile horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Print styles */

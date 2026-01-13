@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div className="bg-slate-900 min-h-screen text-slate-200 selection:bg-teal-300 selection:text-slate-900">
       <Navbar />
-      <main className="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-24">
+      <main className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
         <Hero />
         <About />
         <Experience />
