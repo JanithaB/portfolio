@@ -4,6 +4,11 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Janitha Rathnayake - IoT, Edge Computing & Backend Systems Engineer',
   description: 'Electrical & Electronics Engineer | IoT, Edge Computing & Backend Systems - Portfolio showcasing projects, skills, and experience.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export const viewport: Viewport = {

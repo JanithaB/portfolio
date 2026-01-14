@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <text 
+    x="50" 
+    y="72" 
+    font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+    font-size="72" 
+    font-weight="700" 
+    fill="#5eead4" 
+    text-anchor="middle" 
+    letter-spacing="-2"
+    style="font-variant-numeric: tabular-nums;"
+  >
+    JR.
+  </text>
+</svg>

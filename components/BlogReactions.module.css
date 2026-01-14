@@ -1,0 +1,119 @@
+/* From Uiverse.io by 3bdel3ziz-T - Adapted for dark theme */
+.container {
+  --col-gray: #1e293b;
+  --col-white: #e2e8f0;
+  --col-like: #64ffda;
+  --col-dislike: #f87171;
+  --transition: 350ms;
+  background-color: var(--col-gray);
+  width: 115px;
+  border-radius: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px;
+  user-select: none;
+  border: 1px solid #334155;
+  transform: scale(0.95);
+}
+
+.likeSelected .count {
+  border-left-color: var(--col-like);
+  border-right-color: transparent;
+}
+
+.dislikeSelected .count {
+  border-right-color: var(--col-dislike);
+  border-left-color: transparent;
+}
+
+.container label input {
+  display: none;
+}
+
+.container input[type="radio"]:checked + svg.like {
+  animation: evaluationAnimation var(--transition) ease-in-out 0s 1 normal both;
+  fill: var(--col-like);
+}
+
+.container input[type="radio"]:checked + svg.dislike {
+  animation: evaluationAnimation var(--transition) ease-in-out 0s 1 normal both;
+  fill: var(--col-dislike);
+}
+
+.icon {
+  cursor: pointer;
+  fill: var(--col-white);
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: fill 0.2s ease;
+}
+
+.icon:hover {
+  opacity: 0.8;
+}
+
+.icon.like {
+  margin-left: 7px;
+}
+
+.icon.dislike {
+  margin-right: 7px;
+}
+
+.count {
+  transition: var(--transition);
+  flex: 1;
+  border-left: 1px solid var(--col-white);
+  border-right: 1px solid var(--col-white);
+  position: relative;
+  height: 20px;
+  overflow: hidden;
+  margin: auto;
+  color: white;
+  font-size: 13px;
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5px;
+  flex-direction: row;
+}
+
+.count .number {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(50% - 8px));
+  transition: 1000ms cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.count .number:first-child {
+  transition-delay: 200ms;
+}
+
+.count .number:nth-child(2) {
+  transition-delay: 150ms;
+}
+
+.count .number:last-child {
+  transition-delay: 50ms;
+}
+
+.count .number span {
+  display: block;
+  line-height: 20px;
+  text-align: center;
+}
+
+@keyframes evaluationAnimation {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(-10deg);
+  }
+}
