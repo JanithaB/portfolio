@@ -16,13 +16,16 @@ const Skills: React.FC = () => {
           return (
             <div key={skill.name} className="flex flex-col items-center bg-slate-800 p-4 md:p-6 rounded hover:translate-y-[-5px] transition-transform touch-manipulation">
               {isSvg ? (
-                <img 
+                <Image 
                   src={skill.iconPath} 
                   alt={skill.name}
+                  width={48}
+                  height={48}
                   className="w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4"
                   style={{ 
                     objectFit: 'contain'
                   }}
+                  unoptimized
                 />
               ) : (
                 <Image

@@ -57,9 +57,11 @@ export default function BlogListingWrapper({ children, postSlugs }: BlogListingW
       // Recursively find BlogViewDisplay
       const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
         if (React.isValidElement(node)) {
-          if ((node as any).type?.name === 'BlogViewDisplay' && (node as any).props?.slug) {
-            const slug = (node as any).props.slug;
-            return React.cloneElement(node as React.ReactElement<any>, {
+          const nodeType = node.type as React.ComponentType<{ slug?: string }> | string;
+          const nodeProps = node.props as { slug?: string; children?: React.ReactNode };
+          if (typeof nodeType === 'function' && nodeType.name === 'BlogViewDisplay' && nodeProps?.slug) {
+            const slug = nodeProps.slug;
+            return React.cloneElement(node as React.ReactElement<{ slug?: string; onLoad?: () => void }>, {
               onLoad: () => {
                 setLoadedViews((prev) => {
                   const newSet = new Set(prev);
@@ -69,9 +71,9 @@ export default function BlogListingWrapper({ children, postSlugs }: BlogListingW
               },
             });
           }
-          if (node.props?.children) {
-            return React.cloneElement(node as React.ReactElement<any>, {
-              children: React.Children.map(node.props.children, findAndEnhance),
+          if (nodeProps?.children) {
+            return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
+              children: React.Children.map(nodeProps.children, findAndEnhance),
             });
           }
         }

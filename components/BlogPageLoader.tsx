@@ -10,7 +10,6 @@ interface BlogPageLoaderProps {
 
 export default function BlogPageLoader({ children, slugs }: BlogPageLoaderProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedComponents, setLoadedComponents] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Fallback: Hide loader when DOM is fully loaded
@@ -51,14 +50,6 @@ export default function BlogPageLoader({ children, slugs }: BlogPageLoaderProps)
       window.removeEventListener('load', handleLoad);
     };
   }, [slugs.length]);
-
-  const handleComponentLoad = (slug: string) => {
-    setLoadedComponents((prev) => {
-      const newSet = new Set(prev);
-      newSet.add(slug);
-      return newSet;
-    });
-  };
 
   return (
     <>
