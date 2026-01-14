@@ -23,6 +23,7 @@ export interface Project {
   technologies: string[];
   githubLink: string;
   liveDemoLink?: string;
+  category?: string;
 }
 
 export interface ExperienceItem {
