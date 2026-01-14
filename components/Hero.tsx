@@ -7,7 +7,7 @@ const Hero: React.FC = () => {
       <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-100 mb-2 md:mb-4 leading-tight">
         Janitha Rathnayake.
       </h1>
-      <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-slate-400 mb-4 md:mb-6 leading-tight">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-400 mb-4 md:mb-6 leading-tight">
         I build IoT, Edge Computing & Backend Systems.
       </h2>
       <p className="max-w-lg text-slate-400 text-base md:text-lg leading-relaxed mb-8 md:mb-10">
