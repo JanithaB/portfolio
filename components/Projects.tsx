@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { PROJECTS } from '@/constants';
 
 const Projects: React.FC = () => {
@@ -16,9 +17,11 @@ const Projects: React.FC = () => {
             {/* Image Side */}
             <div className={`md:col-span-7 relative group ${index % 2 !== 0 ? 'md:order-2' : ''}`}>
                <div className="relative rounded bg-teal-500/50 overflow-hidden cursor-pointer">
-                 <img 
+                 <Image 
                    src={project.imageUrl} 
                    alt={project.title} 
+                   width={800}
+                   height={400}
                    className="w-full object-cover grayscale mix-blend-multiply hover:mix-blend-normal hover:grayscale-0 transition-all duration-500 min-h-[200px] md:min-h-[300px]" 
                  />
                  <div className="absolute inset-0 bg-teal-900/30 group-hover:bg-transparent transition-colors"></div>

@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react';
 import FullPageLoader from './FullPageLoader';
 
 interface BlogPostLoaderProps {
-  children: React.ReactNode;
-  slug: string;
+  children: React.ReactNode | ((props: { onReactionsLoad: () => void }) => React.ReactNode);
 }
 
-export default function BlogPostLoader({ children, slug }: BlogPostLoaderProps) {
+export default function BlogPostLoader({ children }: BlogPostLoaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [componentsLoaded, setComponentsLoaded] = useState({
     reactions: false,

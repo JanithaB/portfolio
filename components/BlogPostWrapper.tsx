@@ -9,7 +9,8 @@ interface BlogPostWrapperProps {
   slug: string;
 }
 
-export default function BlogPostWrapper({ children, slug }: BlogPostWrapperProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function BlogPostWrapper({ children, slug: _slug }: BlogPostWrapperProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [reactionsLoaded, setReactionsLoaded] = useState(false);
 
@@ -51,14 +52,16 @@ export default function BlogPostWrapper({ children, slug }: BlogPostWrapperProps
       // Recursively find BlogReactions
       const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
         if (React.isValidElement(node)) {
-          if (node.type === BlogReactions || (node as any).type?.name === 'BlogReactions') {
-            return React.cloneElement(node as React.ReactElement<any>, {
+          const nodeType = node.type as React.ComponentType | string;
+          if (node.type === BlogReactions || (typeof nodeType === 'function' && nodeType.name === 'BlogReactions')) {
+            return React.cloneElement(node as React.ReactElement<{ onLoad?: () => void }>, {
               onLoad: () => setReactionsLoaded(true),
             });
           }
-          if (node.props?.children) {
-            return React.cloneElement(node as React.ReactElement<any>, {
-              children: React.Children.map(node.props.children, findAndEnhance),
+          const nodeProps = node.props as { children?: React.ReactNode };
+          if (nodeProps?.children) {
+            return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
+              children: React.Children.map(nodeProps.children, findAndEnhance),
             });
           }
         }

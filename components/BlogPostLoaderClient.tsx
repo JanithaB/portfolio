@@ -50,8 +50,9 @@ export default function BlogPostLoaderClient({ children, slug }: BlogPostLoaderC
     ? React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           // Find BlogReactions component and inject onLoad prop
-          if (child.type === BlogReactions || (child as any).props?.slug === slug) {
-            return React.cloneElement(child as React.ReactElement<any>, {
+          const childProps = child.props as { slug?: string };
+          if (child.type === BlogReactions || childProps?.slug === slug) {
+            return React.cloneElement(child as React.ReactElement<{ onLoad?: () => void }>, {
               onLoad: () => setReactionsLoaded(true),
             });
           }
