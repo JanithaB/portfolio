@@ -45,41 +45,58 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-teal-300 p-2 -mr-2 touch-manipulation" 
+          className="md:hidden text-teal-300 p-2 -mr-2 touch-manipulation transition-transform duration-300" 
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M6 18L18 6M6 6l12 12"
+                className="transition-opacity duration-300"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 6h16M4 12h16M4 18h16"
+                className="transition-opacity duration-300"
+              />
             )}
           </svg>
         </button>
       </div>
 
       {/* Mobile Menu Overlay */}
-      {menuOpen && (
-        <>
-          <div 
-            className="md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm mt-16"
+      <div 
+        className={`md:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity duration-300 ${
+          menuOpen ? 'opacity-100 visible mt-16' : 'opacity-0 invisible'
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
+      <div className={`md:hidden absolute top-full left-0 w-full bg-slate-800 shadow-xl py-6 flex flex-col items-center space-y-6 z-50 transition-all duration-300 ease-in-out ${
+        menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+      }`}>
+        {NAV_LINKS.map((link, index) => (
+          <a 
+            key={link.id} 
+            href={getHref(link.href)} 
+            className="text-lg text-slate-200 hover:text-teal-300 transition-all touch-manipulation py-2"
+            style={{
+              transitionDelay: menuOpen ? `${index * 50}ms` : '0ms',
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? 'translateY(0)' : 'translateY(-10px)',
+            }}
             onClick={() => setMenuOpen(false)}
-          />
-          <div className="md:hidden absolute top-full left-0 w-full bg-slate-800 shadow-xl py-6 flex flex-col items-center space-y-6 z-50">
-          {NAV_LINKS.map((link) => (
-            <a 
-              key={link.id} 
-              href={getHref(link.href)} 
-                className="text-lg text-slate-200 hover:text-teal-300 transition-colors touch-manipulation py-2"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.name}
-            </a>
-          ))}
-        </div>
-        </>
-      )}
+          >
+            {link.name}
+          </a>
+        ))}
+      </div>
     </nav>
   );
 };

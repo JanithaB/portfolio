@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllPosts } from '@/lib/blog';
 import { Metadata } from 'next';
 import SubscribeForm from '@/components/SubscribeForm';
+import SubscribeButton from '@/components/SubscribeButton';
 import BlogViewDisplay from '@/components/BlogViewDisplay';
 import BlogListingWrapper from '@/components/BlogListingWrapper';
 
@@ -17,9 +18,12 @@ export default function BlogPage() {
   return (
     <BlogListingWrapper postSlugs={postSlugs}>
       <div className="bg-slate-900 min-h-screen text-slate-200">
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 py-12 sm:py-16 md:py-24">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-20 sm:pt-24 md:pt-12 pb-12 sm:pb-16 md:pb-24">
         <div className="mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100 mb-3 sm:mb-4">Blog</h1>
+          <div className="flex flex-row items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100">Blog</h1>
+            <SubscribeButton />
+          </div>
           <p className="text-slate-400 text-base sm:text-lg">
             Articles about IoT, Edge Computing, Backend Systems, and Software Engineering.
           </p>
@@ -60,7 +64,7 @@ export default function BlogPage() {
           </div>
         )}
 
-          <div className="mt-12 sm:mt-16">
+          <div className="mt-12 sm:mt-16 pt-12 sm:pt-16 border-t border-slate-700">
             <SubscribeForm />
           </div>
         </div>

@@ -38,12 +38,12 @@ const SubscribeForm: React.FC = () => {
   };
 
   return (
-    <div className="border border-slate-700 rounded-lg p-6 bg-slate-800/50">
-      <h3 className="text-xl font-bold text-slate-100 mb-2">Subscribe to Updates</h3>
-      <p className="text-slate-400 text-sm mb-4">
+    <div id="subscribe-form" className="border border-slate-700 rounded-lg p-3 sm:p-4 bg-slate-800/50 max-w-md mx-auto">
+      <h3 className="text-sm font-bold text-slate-100 mb-1">Subscribe to Updates</h3>
+      <p className="text-slate-400 text-xs mb-3">
         Get notified when new blog posts are published.
       </p>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         <input
           type="email"
           value={email}
@@ -51,19 +51,22 @@ const SubscribeForm: React.FC = () => {
           placeholder="Enter your email"
           required
           disabled={status === 'loading'}
-          className="flex-1 px-4 py-2 bg-slate-900 border border-slate-700 rounded text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-300 disabled:opacity-50"
+          className="flex-1 px-3 py-2.5 sm:py-1.5 text-sm bg-slate-900 border border-slate-700 rounded text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-300 disabled:opacity-50 touch-manipulation"
         />
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="px-6 py-2 bg-teal-300 text-slate-900 font-semibold rounded hover:bg-teal-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-2.5 sm:py-1.5 text-sm bg-teal-300 text-slate-900 font-medium rounded hover:bg-teal-200 active:bg-teal-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap touch-manipulation"
         >
-          {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+          {status === 'loading' ? '...' : 'Subscribe()'}
         </button>
       </form>
+      <p className="mt-2 text-xs text-slate-500 text-center">
+        No spam. Just learning.
+      </p>
       {message && (
         <p
-          className={`mt-3 text-sm ${
+          className={`mt-2 text-xs ${
             status === 'success' ? 'text-teal-300' : 'text-red-400'
           }`}
         >
