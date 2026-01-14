@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
       </div>
       <div className="font-mono text-xs text-slate-500">
         {/* <p>Built with React & Tailwind CSS</p> */}
-        <p className="mt-2">© {new Date().getFullYear()} Janitha Rathnayake</p>
+        <p className="mt-2">© {new Date().getFullYear()} janitha.is-a.dev</p>
       </div>
     </footer>
   );
