@@ -18,7 +18,7 @@ export default function BlogPage() {
   return (
     <BlogListingWrapper postSlugs={postSlugs}>
       <div className="bg-slate-900 min-h-screen text-slate-200">
-        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-20 sm:pt-24 md:pt-12 pb-12 sm:pb-16 md:pb-24">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-20 sm:pt-24 md:pt-20 pb-12 sm:pb-16 md:pb-24">
         <div className="mb-8 sm:mb-12">
           <div className="flex flex-row items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100">Blog</h1>
