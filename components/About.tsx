@@ -11,7 +11,7 @@ const About: React.FC = () => {
       </div>
       
       <div className="grid md:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
-        <div className="md:col-span-2 text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed sm:leading-relaxed space-y-3 sm:space-y-4 order-2 md:order-1 text-justify md:text-left">
+        <div className="md:col-span-2 text-slate-400 text-sm sm:text-base md:text-lg leading-relaxed sm:leading-relaxed space-y-3 sm:space-y-4 order-2 md:order-1 text-center md:text-left">
           <p>
             Hello! My name is <b>Janitha</b> and I&apos;m an Electrical & Electronics Engineer passionate about IoT, Edge Computing, and Backend Systems. I specialize in building production-level systems that bridge the gap between hardware and software.
           </p>
