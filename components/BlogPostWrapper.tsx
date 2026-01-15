@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import FullPageLoader from './FullPageLoader';
 import BlogReactions from './BlogReactions';
 
@@ -14,71 +14,85 @@ export default function BlogPostWrapper({ children, slug: _slug }: BlogPostWrapp
   const [isLoading, setIsLoading] = useState(true);
   const [reactionsLoaded, setReactionsLoaded] = useState(false);
 
+  // Fallback timeout to prevent getting stuck (max 2.5 seconds)
   useEffect(() => {
-    // Fallback: Hide loader when DOM is fully loaded
-    const handleLoad = () => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-    };
-
-    // Check if already loaded
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-    }
-
-    // Wait for reactions component to load
-    if (reactionsLoaded) {
-      // Small delay for smooth transition
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener('load', handleLoad);
-      };
-    }
+    if (reactionsLoaded) return; // Don't set fallback if already loaded
+    
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
 
     return () => {
-      window.removeEventListener('load', handleLoad);
+      clearTimeout(fallbackTimer);
     };
   }, [reactionsLoaded]);
 
-  // Clone children to inject onLoad callback into BlogReactions
-  const enhancedChildren = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      // Recursively find BlogReactions
-      const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
-        if (React.isValidElement(node)) {
-          const nodeType = node.type as React.ComponentType | string;
-          if (node.type === BlogReactions || (typeof nodeType === 'function' && nodeType.name === 'BlogReactions')) {
-            return React.cloneElement(node as React.ReactElement<{ onLoad?: () => void }>, {
-              onLoad: () => setReactionsLoaded(true),
-            });
-          }
-          const nodeProps = node.props as { children?: React.ReactNode };
-          if (nodeProps?.children) {
-            return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
-              children: React.Children.map(nodeProps.children, findAndEnhance),
-            });
-          }
-        }
-        return node;
-      };
-
-      return findAndEnhance(child);
+  // Wait for reactions to be loaded
+  useEffect(() => {
+    if (reactionsLoaded) {
+      // Hide loader immediately when reactions are loaded
+      setIsLoading(false);
     }
-    return child;
-  });
+  }, [reactionsLoaded]);
+
+  // Memoize child cloning to prevent recreation on every render
+  const enhancedChildren = useMemo(() => {
+    return React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        // Recursively find BlogReactions
+        const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
+          if (React.isValidElement(node)) {
+            const nodeType = node.type;
+            const nodeProps = node.props as { slug?: string; children?: React.ReactNode };
+            
+            // Check if this is BlogReactions component by comparing the component reference
+            if (nodeType === BlogReactions) {
+              return React.cloneElement(node as React.ReactElement<{ slug?: string; onLoad?: () => void }>, {
+                onLoad: () => {
+                  setReactionsLoaded(true);
+                },
+              });
+            }
+            
+            // Recursively search in children
+            if (nodeProps?.children) {
+              return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
+                children: React.Children.map(nodeProps.children, findAndEnhance),
+              });
+            }
+          }
+          return node;
+        };
+
+        return findAndEnhance(child);
+      }
+      return child;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]); // Only recalculate when children changes - setReactionsLoaded callback is stable
 
   return (
-    <>
-      {isLoading && <FullPageLoader />}
-      <div style={{ opacity: isLoading ? 0.3 : 1, transition: 'opacity 0.3s ease' }}>
+    <div className="relative">
+      <div 
+        className={isLoading ? 'opacity-30 pointer-events-none' : 'opacity-100'}
+        style={{ 
+          transition: 'opacity 0.3s ease',
+          willChange: 'opacity'
+        }}
+      >
         {enhancedChildren || children}
       </div>
-    </>
+      {isLoading && (
+        <div 
+          className="fixed inset-0 z-[9999]"
+          style={{ 
+            pointerEvents: 'auto',
+            willChange: 'opacity'
+          }}
+        >
+          <FullPageLoader />
+        </div>
+      )}
+    </div>
   );
 }

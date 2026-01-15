@@ -106,30 +106,57 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data, error } = await supabase
+    // Add timeout to prevent hanging (5 seconds)
+    const fetchPromise = supabase
       .from('blog_post_metrics')
       .select('like_count, dislike_count')
       .eq('slug', slug)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      // PGRST116 is "not found" which is okay
-      console.error('Fetch error:', error);
+    let timeoutId: NodeJS.Timeout | null = null;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error('Request timeout'));
+      }, 5000);
+    });
+
+    try {
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      const { data, error } = result;
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is "not found" which is okay
+        console.error('Fetch error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch reactions' },
+          { status: 500 }
+        );
+      }
+
       return NextResponse.json(
-        { error: 'Failed to fetch reactions' },
-        { status: 500 }
+        { likes: data?.like_count || 0, dislikes: data?.dislike_count || 0 },
+        { status: 200 }
+      );
+    } catch (error) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      console.error('Reaction fetch error:', error);
+      // Return default values on timeout/error so page doesn't break
+      return NextResponse.json(
+        { likes: 0, dislikes: 0 },
+        { status: 200 }
       );
     }
-
-    return NextResponse.json(
-      { likes: data?.like_count || 0, dislikes: data?.dislike_count || 0 },
-      { status: 200 }
-    );
   } catch (error) {
     console.error('Reaction fetch error:', error);
+    // Return default values on timeout/error so page doesn't break
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { likes: 0, dislikes: 0 },
+      { status: 200 }
     );
   }
 }

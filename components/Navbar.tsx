@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
         <a href="/" className="text-2xl md:text-3xl font-bold text-teal-300 tracking-tighter touch-manipulation">JR.</a>
         
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex space-x-10">
           {NAV_LINKS.map((link) => (
             <a 
               key={link.id} 
