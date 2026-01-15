@@ -6,16 +6,16 @@
 
 .bar {
   display: inline-block;
-  width: 3px;
-  height: 20px;
+  width: 2px;
+  height: 12px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   animation: scaleUp4 1s linear infinite;
 }
 
 .bar:nth-child(2) {
-  height: 35px;
-  margin: 0 5px;
+  height: 20px;
+  margin: 0 3px;
   animation-delay: 0.25s;
 }
 

@@ -16,25 +16,70 @@ export default function BlogReactions({ slug, onLoad }: BlogReactionsProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch current reaction counts
-    const fetchReactions = async () => {
+    let isMounted = true;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isCompleted = false;
+    
+      // Fetch current reaction counts with shorter timeout
+      const fetchReactions = async () => {
+        timeoutId = setTimeout(() => {
+          // If request takes too long, stop loading and call onLoad
+          if (isMounted && !isCompleted) {
+            isCompleted = true;
+            setIsLoading(false);
+            onLoad?.();
+          }
+        }, 1500); // 1.5 second timeout (reduced from 2s)
+
       try {
         const response = await fetch(`/api/blog/reactions?slug=${encodeURIComponent(slug)}`);
+        
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+        
+        if (!isMounted) return;
+        
+        // Call onLoad immediately when response is received (before state updates)
+        if (!isCompleted) {
+          isCompleted = true;
+          setIsLoading(false);
+          onLoad?.();
+        }
+        
         if (response.ok) {
           const data = await response.json();
           setLikes(data.likes || 0);
           setDislikes(data.dislikes || 0);
         }
       } catch (error) {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+        if (!isMounted) return;
+        
         console.error('Failed to fetch reactions:', error);
-      } finally {
-        setIsLoading(false);
-        onLoad?.();
+        // Still call onLoad on error so page doesn't get stuck
+        if (!isCompleted) {
+          isCompleted = true;
+          setIsLoading(false);
+          onLoad?.();
+        }
       }
     };
 
     fetchReactions();
-  }, [slug, onLoad]);
+    
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]); // Removed onLoad from dependencies to prevent unnecessary re-renders
 
   const handleReaction = async (reactionType: 'like' | 'dislike') => {
     if (isSubmitting || selectedReaction === reactionType) return;

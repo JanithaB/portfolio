@@ -9,6 +9,7 @@ import SubscribeButton from '@/components/SubscribeButton';
 import BlogReactions from '@/components/BlogReactions';
 import BlogPostWrapper from '@/components/BlogPostWrapper';
 import BlogViewIncrementer from '@/components/BlogViewIncrementer';
+import BlogComments from '@/components/BlogComments';
 
 interface PageProps {
   params: {
@@ -68,8 +69,8 @@ export default function BlogPostPage({ params }: PageProps) {
     <BlogPostWrapper slug={params.slug}>
       <BlogViewIncrementer slug={params.slug} />
       <div className="bg-slate-900 min-h-screen text-slate-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-20 sm:pt-24 md:pt-24 pb-12 sm:pb-16 md:pb-24">
-          <div className="flex flex-row items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-20 pb-12 sm:pb-16 md:pb-24">
+          <div className="flex flex-row items-center justify-between gap-6 sm:gap-8 mb-6 sm:mb-8">
             <Link
               href="/blog"
               className="text-teal-300 hover:text-teal-200 inline-block text-sm sm:text-base"
@@ -99,6 +100,8 @@ export default function BlogPostPage({ params }: PageProps) {
                 </div>
               </div>
             </header>
+
+            <div className="border-t border-slate-700 mb-6 sm:mb-8"></div>
 
             <div className="prose prose-invert max-w-none">
               <ReactMarkdown
@@ -164,8 +167,19 @@ export default function BlogPostPage({ params }: PageProps) {
             </div>
           </article>
 
+          <BlogComments slug={params.slug} />
+
           <div className="mt-12 sm:mt-16 pt-12 sm:pt-16 border-t border-slate-700">
             <SubscribeForm />
+          </div>
+
+          <div className="mt-12 sm:mt-16">
+            <Link
+              href="/blog"
+              className="text-teal-300 hover:text-teal-200 inline-block text-sm sm:text-base"
+            >
+              ← Back to Blog
+            </Link>
           </div>
         </div>
       </div>

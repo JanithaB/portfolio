@@ -89,30 +89,57 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { data, error } = await supabase
+    // Add timeout to prevent hanging (5 seconds)
+    const fetchPromise = supabase
       .from('blog_post_metrics')
       .select('view_count')
       .eq('slug', slug)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      // PGRST116 is "not found" which is okay
-      console.error('Fetch error:', error);
+    let timeoutId: NodeJS.Timeout | null = null;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error('Request timeout'));
+      }, 5000);
+    });
+
+    try {
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      const { data, error } = result;
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is "not found" which is okay
+        console.error('Fetch error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch view count' },
+          { status: 500 }
+        );
+      }
+
       return NextResponse.json(
-        { error: 'Failed to fetch view count' },
-        { status: 500 }
+        { view_count: data?.view_count || 0 },
+        { status: 200 }
+      );
+    } catch (error) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      console.error('View count fetch error:', error);
+      // Return default value on timeout/error so page doesn't break
+      return NextResponse.json(
+        { view_count: 0 },
+        { status: 200 }
       );
     }
-
-    return NextResponse.json(
-      { view_count: data?.view_count || 0 },
-      { status: 200 }
-    );
   } catch (error) {
     console.error('View count fetch error:', error);
+    // Return default value on timeout/error so page doesn't break
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { view_count: 0 },
+      { status: 200 }
     );
   }
 }
