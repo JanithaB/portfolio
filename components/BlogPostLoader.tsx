@@ -14,10 +14,17 @@ export default function BlogPostLoader({ children }: BlogPostLoaderProps) {
   });
 
   useEffect(() => {
+    let isMounted = true;
+    let loadTimer: NodeJS.Timeout | null = null;
+    let transitionTimer: NodeJS.Timeout | null = null;
+    
     // Fallback: Hide loader when DOM is fully loaded
     const handleLoad = () => {
-      setTimeout(() => {
-        setIsLoading(false);
+      if (!isMounted) return;
+      loadTimer = setTimeout(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }, 300);
     };
 
@@ -31,16 +38,21 @@ export default function BlogPostLoader({ children }: BlogPostLoaderProps) {
     // Check if all components are loaded
     if (componentsLoaded.reactions) {
       // Small delay for smooth transition
-      const timer = setTimeout(() => {
-        setIsLoading(false);
+      transitionTimer = setTimeout(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }, 300);
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener('load', handleLoad);
-      };
     }
 
     return () => {
+      isMounted = false;
+      if (loadTimer) {
+        clearTimeout(loadTimer);
+      }
+      if (transitionTimer) {
+        clearTimeout(transitionTimer);
+      }
       window.removeEventListener('load', handleLoad);
     };
   }, [componentsLoaded]);
@@ -50,13 +62,29 @@ export default function BlogPostLoader({ children }: BlogPostLoaderProps) {
   };
 
   return (
-    <>
-      {isLoading && <FullPageLoader />}
-      <div style={{ opacity: isLoading ? 0.3 : 1, transition: 'opacity 0.3s ease' }}>
+    <div className="relative">
+      <div 
+        className={isLoading ? 'opacity-30 pointer-events-none' : 'opacity-100'}
+        style={{ 
+          transition: 'opacity 0.3s ease',
+          willChange: 'opacity'
+        }}
+      >
         {typeof children === 'function'
           ? children({ onReactionsLoad: handleReactionsLoad })
           : children}
       </div>
-    </>
+      {isLoading && (
+        <div 
+          className="fixed inset-0 z-[9999]"
+          style={{ 
+            pointerEvents: 'auto',
+            willChange: 'opacity'
+          }}
+        >
+          <FullPageLoader />
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import FullPageLoader from './FullPageLoader';
 
 interface BlogListingWrapperProps {
@@ -13,10 +13,17 @@ export default function BlogListingWrapper({ children, postSlugs }: BlogListingW
   const [loadedViews, setLoadedViews] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    let isMounted = true;
+    let loadTimer: NodeJS.Timeout | null = null;
+    let transitionTimer: NodeJS.Timeout | null = null;
+    
     // Fallback: Hide loader when DOM is fully loaded
     const handleLoad = () => {
-      setTimeout(() => {
-        setIsLoading(false);
+      if (!isMounted) return;
+      loadTimer = setTimeout(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }, 300);
     };
 
@@ -29,68 +36,98 @@ export default function BlogListingWrapper({ children, postSlugs }: BlogListingW
 
     // Wait for all view counts to load
     if (postSlugs.length === 0) {
-      setIsLoading(false);
+      if (isMounted) {
+        setIsLoading(false);
+      }
       return () => {
+        isMounted = false;
+        if (loadTimer) {
+          clearTimeout(loadTimer);
+        }
         window.removeEventListener('load', handleLoad);
       };
     }
 
-    // If all view counts are loaded, hide loader
+    // If all view counts are loaded, hide loader after 200ms delay
     if (loadedViews.size >= postSlugs.length) {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 300);
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener('load', handleLoad);
-      };
+      transitionTimer = setTimeout(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }, 200);
     }
 
     return () => {
+      isMounted = false;
+      if (loadTimer) {
+        clearTimeout(loadTimer);
+      }
+      if (transitionTimer) {
+        clearTimeout(transitionTimer);
+      }
       window.removeEventListener('load', handleLoad);
     };
   }, [loadedViews.size, postSlugs.length]);
 
-  // Clone children to inject onLoad callback into BlogViewDisplay components
-  const enhancedChildren = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      // Recursively find BlogViewDisplay
-      const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
-        if (React.isValidElement(node)) {
-          const nodeType = node.type as React.ComponentType<{ slug?: string }> | string;
-          const nodeProps = node.props as { slug?: string; children?: React.ReactNode };
-          if (typeof nodeType === 'function' && nodeType.name === 'BlogViewDisplay' && nodeProps?.slug) {
-            const slug = nodeProps.slug;
-            return React.cloneElement(node as React.ReactElement<{ slug?: string; onLoad?: () => void }>, {
-              onLoad: () => {
-                setLoadedViews((prev) => {
-                  const newSet = new Set(prev);
-                  newSet.add(slug);
-                  return newSet;
-                });
-              },
-            });
+  // Memoize child cloning to prevent recreation on every render
+  const enhancedChildren = useMemo(() => {
+    return React.Children.map(children, (child) => {
+      if (React.isValidElement(child)) {
+        // Recursively find BlogViewDisplay
+        const findAndEnhance = (node: React.ReactNode): React.ReactNode => {
+          if (React.isValidElement(node)) {
+            const nodeType = node.type as React.ComponentType<{ slug?: string }> | string;
+            const nodeProps = node.props as { slug?: string; children?: React.ReactNode };
+            if (typeof nodeType === 'function' && nodeType.name === 'BlogViewDisplay' && nodeProps?.slug) {
+              const slug = nodeProps.slug;
+              return React.cloneElement(node as React.ReactElement<{ slug?: string; onLoad?: () => void }>, {
+                onLoad: () => {
+                  setLoadedViews((prev) => {
+                    const newSet = new Set(prev);
+                    newSet.add(slug);
+                    return newSet;
+                  });
+                },
+              });
+            }
+            if (nodeProps?.children) {
+              return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
+                children: React.Children.map(nodeProps.children, findAndEnhance),
+              });
+            }
           }
-          if (nodeProps?.children) {
-            return React.cloneElement(node as React.ReactElement<{ children?: React.ReactNode }>, {
-              children: React.Children.map(nodeProps.children, findAndEnhance),
-            });
-          }
-        }
-        return node;
-      };
+          return node;
+        };
 
-      return findAndEnhance(child);
-    }
-    return child;
-  });
+        return findAndEnhance(child);
+      }
+      return child;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]); // Only recalculate when children changes - setLoadedViews callback is stable
 
   return (
-    <>
-      {isLoading && <FullPageLoader />}
-      <div style={{ opacity: isLoading ? 0.3 : 1, transition: 'opacity 0.3s ease' }}>
+    <div className="relative">
+      <div 
+        className={isLoading ? 'opacity-30 pointer-events-none' : 'opacity-100'}
+        style={{ 
+          transition: 'opacity 0.3s ease',
+          willChange: 'opacity'
+        }}
+      >
         {enhancedChildren || children}
       </div>
-    </>
+      {isLoading && (
+        <div 
+          className="fixed inset-0 z-[9999]"
+          style={{ 
+            pointerEvents: 'auto',
+            willChange: 'opacity'
+          }}
+        >
+          <FullPageLoader />
+        </div>
+      )}
+    </div>
   );
 }
