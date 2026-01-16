@@ -6,12 +6,12 @@ description: Why I’m Starting My Dev Journey (and This Blog)
 
 # My First Commit
 
-Hello there, welcome to my humble corner of the internet.
+Hey, welcome. Make yourself comfortable.
 
 I didn’t start this as a blog.
 
-This was supposed to be just a portfolio site, a place to showcase what I’ve built.  
-But somewhere along the way, I felt the urge to write about the things I keep running into while working in this field.
+<p style="text-align: justify;">This was supposed to be just a portfolio site, a place to showcase what I’ve built.  
+But somewhere along the way, I felt the urge to write about the things I keep running into while working in this field.</p>
 
 Not because I had something groundbreaking to announce,  
 but because I wanted a clean place to be honest.
