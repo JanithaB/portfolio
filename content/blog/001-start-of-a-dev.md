@@ -10,8 +10,8 @@ Hey, welcome. Make yourself comfortable.
 
 I didn’t start this as a blog.
 
-<p style="text-align: justify;">This was supposed to be just a portfolio site, a place to showcase what I’ve built.  
-But somewhere along the way, I felt the urge to write about the things I keep running into while working in this field.</p>
+This was supposed to be just a portfolio site, a place to showcase what I’ve built.  
+But somewhere along the way, I felt the urge to write about the things I keep running into while working in this field.
 
 Not because I had something groundbreaking to announce,  
 but because I wanted a clean place to be honest.
