@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const uniqueFilename = `${timestamp}-${filename}`;
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('blog-images')
       .upload(uniqueFilename, buffer, {
         contentType: 'image/jpeg', // Adjust based on actual image type

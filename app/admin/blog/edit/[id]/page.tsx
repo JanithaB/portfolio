@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
 export default function EditBlogPost() {
@@ -53,7 +53,7 @@ export default function EditBlogPost() {
         isPublished: data.post.is_published,
       });
       setAuthError('');
-    } catch (error) {
+    } catch {
       setAuthError('Failed to load post');
     } finally {
       setLoading(false);

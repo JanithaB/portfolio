@@ -41,7 +41,7 @@ export default function NewBlogPost() {
         const data = await response.json();
         setAuthError(data.error || 'Invalid password');
       }
-    } catch (error) {
+    } catch {
       setAuthError('Authentication failed. Please try again.');
     }
   };

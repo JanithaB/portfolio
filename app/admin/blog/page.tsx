@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -42,7 +42,7 @@ export default function BlogAdmin() {
       setIsAuthenticated(true);
       setPosts(data.posts);
       setAuthError('');
-    } catch (error) {
+    } catch {
       setAuthError('Authentication failed');
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ export default function BlogAdmin() {
       } else {
         alert('Failed to delete post');
       }
-    } catch (error) {
+    } catch {
       alert('Error deleting post');
     }
   };
@@ -88,7 +88,7 @@ export default function BlogAdmin() {
       } else {
         alert('Failed to toggle publish status');
       }
-    } catch (error) {
+    } catch {
       alert('Error toggling publish status');
     }
   };
@@ -112,7 +112,7 @@ export default function BlogAdmin() {
       } else {
         alert(`Failed to send newsletter: ${data.error}`);
       }
-    } catch (error) {
+    } catch {
       alert('Error sending newsletter');
     }
   };
