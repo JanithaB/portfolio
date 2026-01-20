@@ -17,7 +17,7 @@ export default function BlogViewDisplay({ slug, onLoad }: BlogViewDisplayProps) 
     // Only fetch view count, don't increment
     const fetchViewCount = async () => {
       try {
-        const response = await fetch(`/api/blog/views?slug=${encodeURIComponent(slug)}`);
+        const response = await fetch(`/api/blog/views?postId=${encodeURIComponent(slug)}`); // Now using postId
         if (!isMounted) return;
         
         if (response.ok) {

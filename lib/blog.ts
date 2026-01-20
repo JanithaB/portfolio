@@ -1,12 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import readingTime from 'reading-time';
-
-const postsDirectory = path.join(process.cwd(), 'content/blog');
+import { supabase } from './supabase';
 
 export interface BlogPost {
-  slug: string;
+  id: string;
   title: string;
   date: string;
   description: string;
@@ -34,76 +30,78 @@ export function clearPostsCache(): void {
   slugsCacheTime = 0;
 }
 
-export function getAllPosts(): BlogPost[] {
+export async function getAllPosts(): Promise<BlogPost[]> {
   // Return cached data if valid
   if (postsCache && isCacheValid(postsCacheTime)) {
     return postsCache;
   }
 
-  if (!fs.existsSync(postsDirectory)) {
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('id, title, description, content, published_date')
+      .eq('is_published', true)
+      .order('published_date', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching blog posts:', error);
+      return [];
+    }
+
+    const posts: BlogPost[] = (data || []).map((post) => ({
+      id: post.id,
+      title: post.title,
+      date: post.published_date.split('T')[0], // Format as YYYY-MM-DD
+      description: post.description,
+      readingTime: readingTime(post.content).text,
+      content: post.content,
+    }));
+
+    // Update cache
+    postsCache = posts;
+    postsCacheTime = Date.now();
+
+    return posts;
+  } catch (error) {
+    console.error('Error in getAllPosts:', error);
     return [];
   }
-
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPostsData = fileNames
-    .filter((name) => name.endsWith('.md'))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, '');
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data, content } = matter(fileContents);
-
-      return {
-        slug,
-        title: data.title,
-        date: data.date,
-        description: data.description,
-        readingTime: readingTime(content).text,
-        content,
-      };
-    });
-
-  const sortedPosts = allPostsData.sort((a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-
-  // Update cache
-  postsCache = sortedPosts;
-  postsCacheTime = Date.now();
-
-  return sortedPosts;
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
+export async function getPostById(id: string): Promise<BlogPost | null> {
   // Try to get from cache first
   if (postsCache && isCacheValid(postsCacheTime)) {
-    const cachedPost = postsCache.find((post) => post.slug === slug);
+    const cachedPost = postsCache.find((post) => post.id === id);
     if (cachedPost) {
       return cachedPost;
     }
   }
 
   try {
-    const fullPath = path.join(postsDirectory, `${slug}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data, content } = matter(fileContents);
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('id, title, description, content, published_date')
+      .eq('id', id)
+      .eq('is_published', true)
+      .single();
 
-    const post = {
-      slug,
+    if (error || !data) {
+      console.error('Error fetching blog post:', error);
+      return null;
+    }
+
+    const post: BlogPost = {
+      id: data.id,
       title: data.title,
-      date: data.date,
+      date: data.published_date.split('T')[0], // Format as YYYY-MM-DD
       description: data.description,
-      readingTime: readingTime(content).text,
-      content,
+      readingTime: readingTime(data.content).text,
+      content: data.content,
     };
 
     // Update cache if it exists
     if (postsCache) {
-      const index = postsCache.findIndex((p) => p.slug === slug);
+      const index = postsCache.findIndex((p) => p.id === id);
       if (index >= 0) {
         postsCache[index] = post;
       } else {
@@ -113,29 +111,38 @@ export function getPostBySlug(slug: string): BlogPost | null {
     }
 
     return post;
-  } catch {
+  } catch (error) {
+    console.error('Error in getPostById:', error);
     return null;
   }
 }
 
-export function getAllSlugs(): string[] {
+export async function getAllIds(): Promise<string[]> {
   // Return cached data if valid
   if (slugsCache && isCacheValid(slugsCacheTime)) {
     return slugsCache;
   }
 
-  if (!fs.existsSync(postsDirectory)) {
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('id')
+      .eq('is_published', true);
+
+    if (error) {
+      console.error('Error fetching blog post IDs:', error);
+      return [];
+    }
+
+    const ids = (data || []).map((post) => post.id);
+
+    // Update cache
+    slugsCache = ids;
+    slugsCacheTime = Date.now();
+
+    return ids;
+  } catch (error) {
+    console.error('Error in getAllIds:', error);
     return [];
   }
-
-  const fileNames = fs.readdirSync(postsDirectory);
-  const slugs = fileNames
-    .filter((name) => name.endsWith('.md'))
-    .map((fileName) => fileName.replace(/\.md$/, ''));
-
-  // Update cache
-  slugsCache = slugs;
-  slugsCacheTime = Date.now();
-
-  return slugs;
 }

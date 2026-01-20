@@ -1,27 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import { Resend } from 'resend'; // Commented out - using Gmail SMTP instead
 import nodemailer from 'nodemailer';
 import { supabase } from '@/lib/supabase';
-import { getAllPosts } from '@/lib/blog';
 
 export async function POST(request: NextRequest) {
   try {
-    // API Key Authentication
-    const authHeader = request.headers.get('authorization');
-    const apiKey = authHeader?.replace('Bearer ', '') || request.headers.get('x-api-key');
-    const expectedApiKey = process.env.NEWSLETTER_API_KEY;
+    const { id, password } = await request.json();
 
-    if (!expectedApiKey) {
+    // Verify admin password
+    const adminPassword = process.env.ADMIN_PASSWORD || 'your-secret-password';
+    if (password !== adminPassword) {
       return NextResponse.json(
-        { error: 'Server configuration error: API key not set' },
-        { status: 500 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       );
     }
 
-    if (!apiKey || apiKey !== expectedApiKey) {
+    if (!id) {
       return NextResponse.json(
-        { error: 'Unauthorized. Invalid or missing API key' },
-        { status: 401 }
+        { error: 'ID is required' },
+        { status: 400 }
       );
     }
 
@@ -49,24 +46,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Resend implementation (commented out - can be re-enabled later)
-    // if (!process.env.RESEND_API_KEY) {
-    //   return NextResponse.json(
-    //     { error: 'Resend API key not configured' },
-    //     { status: 500 }
-    //   );
-    // }
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // Get the latest blog post
-    const posts = await getAllPosts();
-    if (posts.length === 0) {
+    // Get the blog post
+    const { data: post, error: postError } = await supabase
+      .from('blog_posts')
+      .select('id, title, description, content, published_date')
+      .eq('id', id)
+      .eq('is_published', true)
+      .single();
+
+    if (postError || !post) {
       return NextResponse.json(
-        { error: 'No blog posts available' },
-        { status: 400 }
+        { error: 'Blog post not found or not published' },
+        { status: 404 }
       );
     }
-
-    const latestPost = posts[0];
 
     // Get all subscribers
     const { data: subscribers, error: subscribersError } = await supabase
@@ -83,14 +76,14 @@ export async function POST(request: NextRequest) {
 
     if (!subscribers || subscribers.length === 0) {
       return NextResponse.json(
-        { error: 'No subscribers found' },
-        { status: 400 }
+        { message: 'No subscribers to send to', successful: 0, failed: 0 },
+        { status: 200 }
       );
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    const postUrl = `${siteUrl}/blog/${latestPost.slug}`;
-    const excerpt = latestPost.description || latestPost.content.substring(0, 200) + '...';
+    const postUrl = `${siteUrl}/blog/${post.id}`;
+    const excerpt = post.description || post.content.substring(0, 200) + '...';
 
     // Fetch daily quote from ZenQuotes
     let dailyQuote = { quote: '', author: '' };
@@ -107,7 +100,6 @@ export async function POST(request: NextRequest) {
       }
     } catch (error) {
       console.error('Failed to fetch quote:', error);
-      // Continue without quote if API fails
     }
 
     // Email HTML template
@@ -131,7 +123,7 @@ export async function POST(request: NextRequest) {
                                   <table role="presentation" style="width: 100%; border-collapse: collapse;">
                                       <tr>
                                           <td style="padding-bottom: 8px;">
-                                              <p style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; letter-spacing: -0.5px;"><a href="https://janitha.is-a.dev" target="_blank" style="color: #06b6d4; text-decoration: none;">Janitha.is-a.dev</a> Newsletter</p>
+                                              <p style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; letter-spacing: -0.5px;"><a href="${siteUrl}" target="_blank" style="color: #06b6d4; text-decoration: none;">Janitha.is-a.dev</a> Newsletter</p>
                                           </td>
                                       </tr>
                                       <tr>
@@ -170,7 +162,7 @@ export async function POST(request: NextRequest) {
                                   <table role="presentation" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
                                       <tr>
                                           <td>
-                                              <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; line-height: 1.3; letter-spacing: -0.5px;">${latestPost.title}</h1>
+                                              <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; line-height: 1.3; letter-spacing: -0.5px;">${post.title}</h1>
                                           </td>
                                       </tr>
                                   </table>
@@ -232,22 +224,10 @@ export async function POST(request: NextRequest) {
       return transporter.sendMail({
         from: process.env.GMAIL_USER,
         to: subscriber.email,
-        subject: `New Post: ${latestPost.title}`,
+        subject: `New Post: ${post.title}`,
         html: emailHtml(unsubscribeUrl),
       });
     });
-
-    // Resend implementation (commented out - can be re-enabled later)
-    // const emailPromises = subscribers.map((subscriber) => {
-    //   const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${subscriber.unsubscribe_token || ''}`;
-    //   
-    //   return resend.emails.send({
-    //     from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-    //     to: subscriber.email,
-    //     subject: `New Post: ${latestPost.title}`,
-    //     html: emailHtml(unsubscribeUrl),
-    //   });
-    // });
 
     const results = await Promise.allSettled(emailPromises);
     const successful = results.filter((r) => r.status === 'fulfilled').length;

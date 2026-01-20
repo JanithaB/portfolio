@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 interface BlogViewIncrementerProps {
-  slug: string;
+  slug: string; // slug prop name kept for compatibility, but contains post UUID
 }
 
 export default function BlogViewIncrementer({ slug }: BlogViewIncrementerProps) {
@@ -16,7 +16,7 @@ export default function BlogViewIncrementer({ slug }: BlogViewIncrementerProps) 
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ slug }),
+          body: JSON.stringify({ postId: slug }), // Now sending as postId
         });
       } catch (error) {
         console.error('Failed to increment view count:', error);

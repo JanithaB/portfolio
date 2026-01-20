@@ -13,7 +13,7 @@ export default function BlogViewCounter({ slug }: BlogViewCounterProps) {
     // Fetch current view count
     const fetchViewCount = async () => {
       try {
-        const response = await fetch(`/api/blog/views?slug=${encodeURIComponent(slug)}`);
+        const response = await fetch(`/api/blog/views?postId=${encodeURIComponent(slug)}`); // Using postId now
         if (response.ok) {
           const data = await response.json();
           setViewCount(data.view_count || 0);
@@ -31,7 +31,7 @@ export default function BlogViewCounter({ slug }: BlogViewCounterProps) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ slug }),
+          body: JSON.stringify({ postId: slug }), // Using postId now
         });
 
         if (response.ok) {

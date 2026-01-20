@@ -32,7 +32,7 @@ export default function BlogReactions({ slug, onLoad }: BlogReactionsProps) {
         }, 1500); // 1.5 second timeout (reduced from 2s)
 
       try {
-        const response = await fetch(`/api/blog/reactions?slug=${encodeURIComponent(slug)}`);
+        const response = await fetch(`/api/blog/reactions?postId=${encodeURIComponent(slug)}`);
         
         if (timeoutId) {
           clearTimeout(timeoutId);
@@ -91,7 +91,7 @@ export default function BlogReactions({ slug, onLoad }: BlogReactionsProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ slug, reactionType }),
+        body: JSON.stringify({ postId: slug, reactionType }),
       });
 
       if (response.ok) {

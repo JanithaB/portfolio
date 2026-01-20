@@ -4,70 +4,80 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { slug } = body;
+    const { postId } = body;
 
-    if (!slug || typeof slug !== 'string') {
+    if (!postId || typeof postId !== 'string') {
       return NextResponse.json(
-        { error: 'Slug is required' },
+        { error: 'Post ID is required' },
         { status: 400 }
       );
     }
 
-    // Check if metrics record exists
-    const { data: existing } = await supabase
+    // Use UPSERT to avoid race conditions
+    // First try to insert, if conflict then increment
+    const { data: insertData, error: insertError } = await supabase
       .from('blog_post_metrics')
-      .select('id, view_count')
-      .eq('slug', slug)
+      .insert({
+        post_id: postId,
+        view_count: 1,
+      })
+      .select('view_count')
       .single();
 
-    if (existing) {
-      // Increment existing count
-      const { data, error } = await supabase
-        .from('blog_post_metrics')
-        .update({
-          view_count: (existing.view_count || 0) + 1,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existing.id)
-        .select('view_count')
-        .single();
+    if (insertError) {
+      // If duplicate key (record exists), increment the count
+      if (insertError.code === '23505') {
+        const { data, error } = await supabase
+          .from('blog_post_metrics')
+          .select('view_count')
+          .eq('post_id', postId)
+          .single();
 
-      if (error) {
-        console.error('Update error:', error);
+        if (error) {
+          console.error('Fetch error:', error);
+          return NextResponse.json(
+            { error: 'Failed to fetch view count' },
+            { status: 500 }
+          );
+        }
+
+        const newCount = (data.view_count || 0) + 1;
+
+        const { error: updateError } = await supabase
+          .from('blog_post_metrics')
+          .update({
+            view_count: newCount,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('post_id', postId);
+
+        if (updateError) {
+          console.error('Update error:', updateError);
+          return NextResponse.json(
+            { error: 'Failed to update view count' },
+            { status: 500 }
+          );
+        }
+
         return NextResponse.json(
-          { error: 'Failed to update view count' },
-          { status: 500 }
+          { view_count: newCount },
+          { status: 200 }
         );
       }
 
+      // Other errors
+      console.error('Insert error:', insertError);
       return NextResponse.json(
-        { view_count: data.view_count },
-        { status: 200 }
-      );
-    } else {
-      // Create new metrics record
-      const { data, error } = await supabase
-        .from('blog_post_metrics')
-        .insert({
-          slug,
-          view_count: 1,
-        })
-        .select('view_count')
-        .single();
-
-      if (error) {
-        console.error('Insert error:', error);
-        return NextResponse.json(
-          { error: 'Failed to create view count' },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json(
-        { view_count: data.view_count },
-        { status: 200 }
+        { error: 'Failed to create view count' },
+        { status: 500 }
       );
     }
+
+    // Successfully inserted new record
+    return NextResponse.json(
+      { view_count: insertData.view_count },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('View count error:', error);
     return NextResponse.json(
@@ -80,11 +90,11 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const slug = searchParams.get('slug');
+    const postId = searchParams.get('postId');
 
-    if (!slug) {
+    if (!postId) {
       return NextResponse.json(
-        { error: 'Slug is required' },
+        { error: 'Post ID is required' },
         { status: 400 }
       );
     }
@@ -93,7 +103,7 @@ export async function GET(request: NextRequest) {
     const fetchPromise = supabase
       .from('blog_post_metrics')
       .select('view_count')
-      .eq('slug', slug)
+      .eq('post_id', postId)
       .single();
 
     let timeoutId: NodeJS.Timeout | null = null;

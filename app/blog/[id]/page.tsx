@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllSlugs } from '@/lib/blog';
+import { getPostById, getAllIds } from '@/lib/blog';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Metadata } from 'next';
@@ -13,19 +13,19 @@ import BlogComments from '@/components/BlogComments';
 
 interface PageProps {
   params: {
-    slug: string;
+    id: string;
   };
 }
 
-export function generateStaticParams() {
-  const slugs = getAllSlugs();
-  return slugs.map((slug) => ({
-    slug,
+export async function generateStaticParams() {
+  const ids = await getAllIds();
+  return ids.map((id) => ({
+    id,
   }));
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const post = getPostBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const post = await getPostById(params.id);
 
   if (!post) {
     return {
@@ -45,8 +45,8 @@ export function generateMetadata({ params }: PageProps): Metadata {
   };
 }
 
-export default function BlogPostPage({ params }: PageProps) {
-  const post = getPostBySlug(params.slug);
+export default async function BlogPostPage({ params }: PageProps) {
+  const post = await getPostById(params.id);
 
   if (!post) {
     notFound();
@@ -66,8 +66,8 @@ export default function BlogPostPage({ params }: PageProps) {
   }
 
   return (
-    <BlogPostWrapper slug={params.slug}>
-      <BlogViewIncrementer slug={params.slug} />
+    <BlogPostWrapper slug={params.id}>
+      <BlogViewIncrementer slug={params.id} />
       <div className="bg-slate-900 min-h-screen text-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-20 pb-12 sm:pb-16 md:pb-24">
           <div className="flex flex-row items-center justify-between gap-6 sm:gap-8 mb-6 sm:mb-8">
@@ -96,7 +96,7 @@ export default function BlogPostPage({ params }: PageProps) {
                 <span className="hidden sm:inline">•</span>
                 <span>{post.readingTime}</span>
                 <div className="flex items-center ml-auto">
-                  <BlogReactions slug={params.slug} />
+                  <BlogReactions slug={params.id} />
                 </div>
               </div>
             </header>
@@ -160,6 +160,14 @@ export default function BlogPostPage({ params }: PageProps) {
                       {children}
                     </blockquote>
                   ),
+                  img: ({ src, alt }) => (
+                    <img
+                      src={src}
+                      alt={alt || 'Blog image'}
+                      className="w-full rounded-lg my-4 sm:my-6"
+                      loading="lazy"
+                    />
+                  ),
                 }}
               >
                 {content}
@@ -167,7 +175,7 @@ export default function BlogPostPage({ params }: PageProps) {
             </div>
           </article>
 
-          <BlogComments slug={params.slug} />
+          <BlogComments slug={params.id} />
 
           <div className="mt-12 sm:mt-16 pt-12 sm:pt-16 border-t border-slate-700">
             <SubscribeForm />

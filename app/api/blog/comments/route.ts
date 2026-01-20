@@ -4,11 +4,11 @@ import { supabase } from '@/lib/supabase';
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const slug = searchParams.get('slug');
+    const postId = searchParams.get('postId');
 
-    if (!slug) {
+    if (!postId) {
       return NextResponse.json(
-        { error: 'Slug is required' },
+        { error: 'Post ID is required' },
         { status: 400 }
       );
     }
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from('blog_comments')
       .select('id, author_name, content, parent_id, created_at')
-      .eq('slug', slug)
+      .eq('post_id', postId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -66,11 +66,11 @@ function generateRandomName(): string {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { slug, author_name, content, parent_id } = body;
+    const { postId, author_name, content, parent_id } = body;
 
-    if (!slug || typeof slug !== 'string') {
+    if (!postId || typeof postId !== 'string') {
       return NextResponse.json(
-        { error: 'Slug is required' },
+        { error: 'Post ID is required' },
         { status: 400 }
       );
     }
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
       const { data: parentComment, error: parentError } = await supabase
         .from('blog_comments')
-        .select('id, slug')
+        .select('id, post_id')
         .eq('id', parent_id.trim())
         .single();
 
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      if (parentComment.slug !== slug) {
+      if (parentComment.post_id !== postId) {
         return NextResponse.json(
           { error: 'Parent comment does not belong to this post' },
           { status: 400 }
@@ -126,12 +126,12 @@ export async function POST(request: NextRequest) {
     }
 
     const insertData: {
-      slug: string;
+      post_id: string;
       author_name: string;
       content: string;
       parent_id?: string;
     } = {
-      slug,
+      post_id: postId,
       author_name: finalAuthorName,
       content: content.trim(),
     };

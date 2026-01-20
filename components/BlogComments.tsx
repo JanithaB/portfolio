@@ -183,7 +183,7 @@ export default function BlogComments({ slug }: BlogCommentsProps) {
 
   const fetchComments = useCallback(async () => {
     try {
-      const response = await fetch(`/api/blog/comments?slug=${encodeURIComponent(slug)}`);
+      const response = await fetch(`/api/blog/comments?postId=${encodeURIComponent(slug)}`);
       if (response.ok) {
         const data = await response.json();
         // Organize comments into a tree structure
@@ -230,7 +230,7 @@ export default function BlogComments({ slug }: BlogCommentsProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          slug,
+          postId: slug,
           author_name: authorName.trim() || undefined,
           content,
         }),
@@ -337,7 +337,7 @@ export default function BlogComments({ slug }: BlogCommentsProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          slug,
+          postId: slug,
           author_name: replyAuthorName || undefined,
           content: replyContent,
           parent_id: parentId,

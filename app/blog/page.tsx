@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   description: 'Articles about IoT, Edge Computing, Backend Systems, and Software Engineering.',
 };
 
-export default function BlogPage() {
-  const posts = getAllPosts();
-  const postSlugs = posts.map((post) => post.slug);
+export default async function BlogPage() {
+  const posts = await getAllPosts();
+  const postSlugs = posts.map((post) => post.id);
 
   return (
     <BlogListingWrapper postSlugs={postSlugs}>
@@ -37,10 +37,10 @@ export default function BlogPage() {
           <div className="space-y-6 sm:space-y-8">
             {posts.map((post) => (
               <article
-                key={post.slug}
+                key={post.id}
                 className="border border-slate-700 rounded-lg p-4 sm:p-6 hover:border-teal-300/50 transition-colors"
               >
-                <Link href={`/blog/${post.slug}`}>
+                <Link href={`/blog/${post.id}`}>
                   <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-teal-300 hover:text-teal-200 mb-2 sm:mb-3 leading-tight">
                     {post.title}
                   </h2>
@@ -57,7 +57,7 @@ export default function BlogPage() {
                   <span className="hidden sm:inline">•</span>
                   <span>{post.readingTime}</span>
                   <span className="hidden sm:inline">•</span>
-                  <BlogViewDisplay slug={post.slug} />
+                  <BlogViewDisplay slug={post.id} />
                 </div>
               </article>
             ))}

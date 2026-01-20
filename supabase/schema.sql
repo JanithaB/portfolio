@@ -28,11 +28,50 @@ ADD COLUMN IF NOT EXISTS unsubscribe_token UUID DEFAULT gen_random_uuid();
 CREATE INDEX IF NOT EXISTS idx_subscribers_unsubscribe_token 
 ON subscribers(unsubscribe_token);
 
+-- Create blog_posts table for storing blog post content
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  content TEXT NOT NULL,
+  cover_image TEXT,
+  published_date TIMESTAMP WITH TIME ZONE NOT NULL,
+  is_published BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create index on id for faster lookups (already primary key, but explicit)
+CREATE INDEX IF NOT EXISTS idx_blog_posts_id ON blog_posts(id);
+
+-- Create index on published_date for sorting
+CREATE INDEX IF NOT EXISTS idx_blog_posts_published_date ON blog_posts(published_date DESC);
+
+-- Create index on is_published for filtering
+CREATE INDEX IF NOT EXISTS idx_blog_posts_is_published ON blog_posts(is_published);
+
+-- Enable Row Level Security
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+
+-- Policy to allow public read access to published posts
+DROP POLICY IF EXISTS "Public can read published blog posts" ON blog_posts;
+CREATE POLICY "Public can read published blog posts"
+  ON blog_posts
+  FOR SELECT
+  USING (is_published = true);
+
+-- Policy to allow service role to manage all posts
+DROP POLICY IF EXISTS "Service role can manage blog posts" ON blog_posts;
+CREATE POLICY "Service role can manage blog posts"
+  ON blog_posts
+  FOR ALL
+  USING (true)
+  WITH CHECK (true);
+
 -- Create blog_post_metrics table for tracking views, likes, and dislikes
--- Blog post content is stored in MD files in content/blog directory
 CREATE TABLE IF NOT EXISTS blog_post_metrics (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug TEXT NOT NULL UNIQUE,
+  post_id UUID NOT NULL UNIQUE REFERENCES blog_posts(id) ON DELETE CASCADE,
   view_count INTEGER DEFAULT 0,
   like_count INTEGER DEFAULT 0,
   dislike_count INTEGER DEFAULT 0,
@@ -40,8 +79,8 @@ CREATE TABLE IF NOT EXISTS blog_post_metrics (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index on slug for faster lookups
-CREATE INDEX IF NOT EXISTS idx_blog_post_metrics_slug ON blog_post_metrics(slug);
+-- Create index on post_id for faster lookups
+CREATE INDEX IF NOT EXISTS idx_blog_post_metrics_post_id ON blog_post_metrics(post_id);
 
 -- Enable Row Level Security
 ALTER TABLE blog_post_metrics ENABLE ROW LEVEL SECURITY;
@@ -57,7 +96,7 @@ CREATE POLICY "Service role can manage blog post metrics"
 -- Create blog_comments table for storing comments on blog posts
 CREATE TABLE IF NOT EXISTS blog_comments (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug TEXT NOT NULL,
+  post_id UUID NOT NULL REFERENCES blog_posts(id) ON DELETE CASCADE,
   author_name TEXT NOT NULL,
   content TEXT NOT NULL,
   parent_id UUID REFERENCES blog_comments(id) ON DELETE CASCADE,
@@ -65,8 +104,8 @@ CREATE TABLE IF NOT EXISTS blog_comments (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index on slug for faster lookups
-CREATE INDEX IF NOT EXISTS idx_blog_comments_slug ON blog_comments(slug);
+-- Create index on post_id for faster lookups
+CREATE INDEX IF NOT EXISTS idx_blog_comments_post_id ON blog_comments(post_id);
 
 -- Create index on created_at for sorting
 CREATE INDEX IF NOT EXISTS idx_blog_comments_created_at ON blog_comments(created_at DESC);
