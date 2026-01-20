@@ -80,15 +80,30 @@ export default function BlogAdmin() {
       });
 
       if (response.ok) {
+        // Update the local state immediately
         setPosts(
           posts.map((post) =>
             post.id === id ? { ...post, is_published: !currentStatus } : post
           )
         );
+        
+        // Optionally, refetch the posts to ensure consistency
+        const refetchResponse = await fetch('/api/blog/list', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        
+        if (refetchResponse.ok) {
+          const data = await refetchResponse.json();
+          setPosts(data.posts);
+        }
       } else {
-        alert('Failed to toggle publish status');
+        const errorData = await response.json();
+        alert(`Failed to toggle publish status: ${errorData.error || 'Unknown error'}`);
       }
-    } catch {
+    } catch (error) {
+      console.error('Toggle publish error:', error);
       alert('Error toggling publish status');
     }
   };
