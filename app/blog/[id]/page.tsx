@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-100 mt-4 sm:mt-5 mb-2 leading-tight">{children}</h3>
                   ),
                   p: ({ children }) => (
-                    <p className="text-slate-300 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">{children}</p>
+                    <p className="text-slate-300 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base text-justify">{children}</p>
                   ),
                   ul: ({ children }) => (
                     <ul className="list-disc list-inside text-slate-300 mb-3 sm:mb-4 space-y-1 sm:space-y-2 ml-2 sm:ml-4 text-sm sm:text-base">{children}</ul>
@@ -156,7 +156,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     </a>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-teal-300 pl-3 sm:pl-4 italic text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                    <blockquote className="border-l-4 border-teal-300 pl-3 sm:pl-4 italic text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base text-justify">
                       {children}
                     </blockquote>
                   ),
