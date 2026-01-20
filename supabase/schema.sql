@@ -85,7 +85,29 @@ CREATE INDEX IF NOT EXISTS idx_blog_post_metrics_post_id ON blog_post_metrics(po
 -- Enable Row Level Security
 ALTER TABLE blog_post_metrics ENABLE ROW LEVEL SECURITY;
 
--- Policy to allow service role to manage metrics
+-- Policy to allow public read access to metrics
+DROP POLICY IF EXISTS "Public can read blog post metrics" ON blog_post_metrics;
+CREATE POLICY "Public can read blog post metrics"
+  ON blog_post_metrics
+  FOR SELECT
+  USING (true);
+
+-- Policy to allow public insert for metrics (for first view/reaction)
+DROP POLICY IF EXISTS "Public can insert blog post metrics" ON blog_post_metrics;
+CREATE POLICY "Public can insert blog post metrics"
+  ON blog_post_metrics
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Policy to allow public update for metrics (for incrementing views and reactions)
+DROP POLICY IF EXISTS "Public can update blog post metrics" ON blog_post_metrics;
+CREATE POLICY "Public can update blog post metrics"
+  ON blog_post_metrics
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (true);
+
+-- Policy to allow service role to manage all metrics (admin operations)
 DROP POLICY IF EXISTS "Service role can manage blog post metrics" ON blog_post_metrics;
 CREATE POLICY "Service role can manage blog post metrics"
   ON blog_post_metrics
