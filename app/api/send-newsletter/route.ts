@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    const postUrl = `${siteUrl}/blog/${latestPost.slug}`;
+    const postUrl = `${siteUrl}/blog/${latestPost.id}`;
     const excerpt = latestPost.description || latestPost.content.substring(0, 200) + '...';
 
     // Fetch daily quote from ZenQuotes
