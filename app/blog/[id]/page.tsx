@@ -17,6 +17,9 @@ interface PageProps {
   };
 }
 
+// Revalidate every 60 seconds (ISR - Incremental Static Regeneration)
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const ids = await getAllIds();
   return ids.map((id) => ({
