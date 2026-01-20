@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import sharp from 'sharp';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,15 +26,28 @@ export async function POST(request: NextRequest) {
     const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const uniqueFilename = `${timestamp}-${filename}`;
+    // Compress and optimize image using sharp
+    const compressedBuffer = await sharp(buffer)
+      .resize(1200, null, { 
+        withoutEnlargement: true, // Don't upscale smaller images
+        fit: 'inside' // Maintain aspect ratio
+      })
+      .webp({ 
+        quality: 80, // Good balance between quality and file size
+        effort: 4 // Compression effort (0-6, higher = better compression but slower)
+      })
+      .toBuffer();
 
-    // Upload to Supabase Storage
+    // Generate unique filename with .webp extension
+    const timestamp = Date.now();
+    const baseFilename = filename.replace(/\.[^.]+$/, ''); // Remove original extension
+    const uniqueFilename = `${timestamp}-${baseFilename}.webp`;
+
+    // Upload compressed image to Supabase Storage
     const { error } = await supabase.storage
       .from('blog-images')
-      .upload(uniqueFilename, buffer, {
-        contentType: 'image/jpeg', // Adjust based on actual image type
+      .upload(uniqueFilename, compressedBuffer, {
+        contentType: 'image/webp',
         upsert: false,
       });
 
