@@ -12,9 +12,7 @@ import BlogViewIncrementer from '@/components/BlogViewIncrementer';
 import BlogComments from '@/components/BlogComments';
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 // Revalidate every 60 seconds (ISR - Incremental Static Regeneration)
@@ -28,7 +26,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = await getPostById(params.id);
+  const { id } = await params;
+  const post = await getPostById(id);
 
   if (!post) {
     return {
@@ -49,7 +48,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const post = await getPostById(params.id);
+  const { id } = await params;
+  const post = await getPostById(id);
 
   if (!post) {
     notFound();
@@ -69,8 +69,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   return (
-    <BlogPostWrapper slug={params.id}>
-      <BlogViewIncrementer slug={params.id} />
+    <BlogPostWrapper slug={id}>
+      <BlogViewIncrementer slug={id} />
       <div className="bg-slate-900 min-h-screen text-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-12 lg:px-24 pt-24 sm:pt-28 md:pt-20 pb-12 sm:pb-16 md:pb-24">
           <div className="flex flex-row items-center justify-between gap-6 sm:gap-8 mb-6 sm:mb-8">
@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <span className="hidden sm:inline">•</span>
                 <span>{post.readingTime}</span>
                 <div className="flex items-center ml-auto">
-                  <BlogReactions slug={params.id} />
+                  <BlogReactions slug={id} />
                 </div>
               </div>
             </header>
@@ -179,7 +179,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             </div>
           </article>
 
-          <BlogComments slug={params.id} />
+          <BlogComments slug={id} />
 
           <div className="mt-12 sm:mt-16 pt-12 sm:pt-16 border-t border-slate-700">
             <SubscribeForm />

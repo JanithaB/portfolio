@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     token?: string;
     email?: string;
-  };
+  }>;
 }
 
 async function UnsubscribeAction({ token, email }: { token?: string; email?: string }) {
@@ -61,8 +61,9 @@ async function UnsubscribeAction({ token, email }: { token?: string; email?: str
 }
 
 export default async function UnsubscribePage({ searchParams }: PageProps) {
-  const token = searchParams?.token;
-  const email = searchParams?.email;
+  const resolved = await searchParams;
+  const token = resolved?.token;
+  const email = resolved?.email;
 
   if (!token && !email) {
     return (
