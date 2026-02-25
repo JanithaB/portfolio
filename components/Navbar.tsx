@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { NAV_LINKS } from '@/constants';
 
 const Navbar: React.FC = () => {
@@ -34,7 +35,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-sm shadow-lg py-3 md:py-4' : 'bg-slate-900/80 md:bg-transparent py-4 md:py-6'}`}>
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-12 flex justify-between items-center">
-        <a href="/" className="text-2xl md:text-3xl font-bold text-teal-300 tracking-tighter touch-manipulation">JR.</a>
+        <Link href="/" className="text-2xl md:text-3xl font-bold text-teal-300 tracking-tighter touch-manipulation">JR.</Link>
         
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-10">

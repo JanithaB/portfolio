@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 interface PageProps {
@@ -102,12 +103,12 @@ export default async function UnsubscribePage({ searchParams }: PageProps) {
             <p className="text-slate-400 mb-6">
               You have been removed from our mailing list. You will no longer receive email updates.
             </p>
-            <a
+            <Link
               href="/blog"
               className="text-teal-300 hover:text-teal-200 underline"
             >
               Back to Blog
-            </a>
+            </Link>
           </>
         ) : (
           <>
@@ -115,12 +116,12 @@ export default async function UnsubscribePage({ searchParams }: PageProps) {
               Unsubscribe Failed
             </h1>
             <p className="text-slate-400 mb-6">{result.message}</p>
-            <a
+            <Link
               href="/blog"
               className="text-teal-300 hover:text-teal-200 underline"
             >
               Back to Blog
-            </a>
+            </Link>
           </>
         )}
       </div>
